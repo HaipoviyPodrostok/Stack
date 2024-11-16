@@ -3,7 +3,7 @@
 
 int main() {
     
-    stack stack_1;
+    stack stack_1 = {};
     stack_constructor(&stack_1, 5);
 
     stack_elem stack_peak = 0;
@@ -27,9 +27,9 @@ int main() {
     stack_peak = stack_pop(&stack_1);
     stack_peak = stack_pop(&stack_1);
 
-    printf("%f", stack_peak);  
+    printf("%s:%d, %s(): stack_peak = %f\n", __FILE__, __FILE__, __func__, stack_peak);  
 
-    stack_distructor(&stack_1);
+    stack_destructor(&stack_1);
 
     return 0;
 }

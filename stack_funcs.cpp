@@ -3,6 +3,7 @@
 
 int stack_push(stack* stk, stack_elem value) {
     verificator(stk);
+    
     stk->data = stack_capacity_check(stk);
 
     stk->data[stk->size] = value;

@@ -5,7 +5,7 @@
 int stack_check(stack* stk) {
     
     if (stk == NULL) {
-        return ERROR_NULL_POINTER;
+        return ERROR_NULL_POINTER;        // data pointer
     } 
 
     if (stk->size < 0) {

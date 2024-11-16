@@ -16,7 +16,7 @@ int stack_constructor(stack* stk, int capacity) {
     return 0;
 }
 
-int stack_distructor(stack* stk) {
+int stack_destructor(stack* stk) {
     
     if (stk->data == NULL) {
         return ERROR_NULL_POINTER;
@@ -45,7 +45,7 @@ stack_elem* stack_capacity_check(stack* stk) {
     if (stack_size >= stack_capacity) {
         stack_capacity ++;
         data_size += sizeof(stack_elem);
-        stack_data = (stack_elem*) realloc(stack_data, (size_t) data_size);
+        stack_data = (stack_elem*) realloc(stack_data, (size_t) data_size);   //проверка адреса
     }
 
     stk->capacity = stack_capacity;
