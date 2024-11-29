@@ -1,25 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "stack_create.h"
 
-int stack_constructor(stack* stk, int capacity) {
+int stack_constructor(stack_t* stk, int capacity) {
     
-    stk->data = (stack_elem*) calloc((size_t) capacity + 1, sizeof(stack_elem));
+    stk->data = (stack_elem_t*) calloc((size_t) capacity + 2, sizeof(stack_elem_t));
     
     if (stk->data == NULL) {
-        return ERROR_NULL_POINTER;
+        return ERROR_STACK_NULL_POINTER;
     }
     
-    stk->size = 0;
-    stk->capacity = capacity;
+    stk->size = 1;
+    stk->data[0] = 0xDEDBABA;
+    stk->capacity = capacity + 1;
+    stk->data[stk->capacity] = 0xDEDDEAD;
     
     return 0;
 }
 
-int stack_destructor(stack* stk) {
+int stack_destructor(stack_t* stk) {
     
     if (stk->data == NULL) {
-        return ERROR_NULL_POINTER;
+        return ERROR_STACK_NULL_POINTER;
     }
     
     free(stk->data);
@@ -31,24 +34,23 @@ int stack_destructor(stack* stk) {
     return 0;
 }
 
-stack_elem* stack_capacity_check(stack* stk) {
-    stack_elem* stack_data = 0;
-    int stack_size = 0;
-    int stack_capacity = 0;
+stack_elem_t* stack_capacity_check(stack_t* stk) {
+                               
+    stack_elem_t* stack_data = NULL;
     size_t data_size = 0;
 
     stack_data = stk->data;
-    stack_size = stk->size;
-    stack_capacity = stk->capacity;                                 //что выгоднее с точки зрения скорости?
-    data_size = (size_t) (stack_capacity + 1) * sizeof(stack_elem);
+    data_size = (size_t) (stk->capacity + 1) * sizeof(stack_elem_t);
 
-    if (stack_size >= stack_capacity) {
-        stack_capacity ++;
-        data_size += sizeof(stack_elem);
-        stack_data = (stack_elem*) realloc(stack_data, (size_t) data_size);   //проверка адреса
+    if (stk->size >= stk->capacity) {
+        data_size += sizeof(stack_elem_t);
+        stack_data = (stack_elem_t*) realloc(stk->data, (size_t) data_size);  
+        stk->capacity ++;
+        stack_data[stk->capacity] = stack_data[stk->capacity - 1];
+        stack_data[stk->capacity - 1] = 0;
     }
-
-    stk->capacity = stack_capacity;
 
     return stack_data;
 }
+
+

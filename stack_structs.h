@@ -1,9 +1,9 @@
-typedef double stack_elem;
+typedef double stack_elem_t;
 
 typedef struct Stack {
-    stack_elem* data;
+    stack_elem_t* data;
     int size;
     int capacity;
-} stack;
+} stack_t;
 
 
