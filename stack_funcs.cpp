@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include "stack_funcs.h"
+#include "verificator.h"
+#include "stack_create.h"
 
 int stack_push(stack_t* stk, stack_elem_t value) {
     verificator(stk);
     
-    stk->data = stack_capacity_check(stk);
+    stack_capacity_check(stk);
 
     stk->data[stk->size] = value;
     stk->size++;
     
     verificator(stk);
-    return(0);
+    return 0;
 }
 
 stack_elem_t stack_pop(stack_t* stk) {
@@ -28,10 +30,4 @@ stack_elem_t stack_pop(stack_t* stk) {
     verificator(stk);
 
     return stack_peak;
-}
-
-int get_size(stack_t* stk) {
-    verificator(stk);
-    
-    return stk->size -1;
 }

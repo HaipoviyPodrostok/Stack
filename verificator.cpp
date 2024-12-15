@@ -3,6 +3,16 @@
 #include <math.h>
 #include "verificator.h"
 
+int verificator(const stack_t* stk) {
+    
+    if (stack_check(stk) != 0) {
+        stack_dump(stk);
+        abort();
+    }
+
+    return 0;
+}
+
 int stack_check(const stack_t* stk) {
     
     if (stk == NULL) {
@@ -13,11 +23,11 @@ int stack_check(const stack_t* stk) {
         return ERROR_DATA_NULL_POINTER;
     }
 
-    if (stk->size < 1) {
+    if (stk->size < 0) {
         return ERROR_NEGATIVE_SIZE;
     }
 
-    if (stk->capacity < 1) {
+    if (stk->capacity < 0) {
         return ERROR_NEGATIVE_CAPACITY;
     }
 
@@ -25,11 +35,11 @@ int stack_check(const stack_t* stk) {
         return ERROR_SIZE_OVERFLOW;
     }
 
-    if (!isEqual(stk->data[0], 0xDEDBABA)) {
+    if (*(stk->data - sizeof(unsigned long long) / sizeof(stack_elem_t)) != 0xDEDBABA) {   //*((unsigned long long*) (stk->data - sizeof(unsigned long long) / sizeof(stack_elem_t)))
         return ERROR_STACK_CANARY_BEGINING;
     }
 
-    if (!isEqual(stk->data[stk->capacity], 0xDEDDEAD)) {
+    if ((stk->data[stk->capacity]) !=  0xDEDDEAD) {
         return ERROR_STACK_CANARY_END;
     }
 
@@ -43,54 +53,44 @@ void stack_dump(const stack_t* stk) {
     printf("stack_capacity: %d\n", (stk->capacity));
 }
 
-int verificator(const stack_t* stk) {
-    
-    if (stack_check(stk) != 0) {
-        stack_dump(stk);
-        abort();
-    }
-
-    return 0;
-}
-
 void print_error(const stack_t* stk) {
-    int error_num = 0;
+    int error_num = 0;    
     error_num = stack_check(stk);
 
-    if (error_num == ERROR_STACK_NULL_POINTER) {
-        printf("ERROR_STACK_NULL_POINTER\n");
-    }
+    switch (error_num) {
     
-    if (error_num == ERROR_DATA_NULL_POINTER) {
-        printf("ERROR_DATA_NULL_POINTER\n");
-    }
+        case ERROR_STACK_NULL_POINTER:
+            printf("ERROR_STACK_NULL_POINTER\n");
+            break;
+        
+        case ERROR_DATA_NULL_POINTER:
+            printf("ERROR_DATA_NULL_POINTER\n");
+            break;
 
-    if (error_num == ERROR_NEGATIVE_SIZE) {
-        printf("ERROR_NEGATIVE_SIZE\n");
-    }
+        case ERROR_NEGATIVE_SIZE:
+            printf("ERROR_NEGATIVE_SIZE\n");
+            break;
 
-    if (error_num == ERROR_NEGATIVE_CAPACITY) {
-        printf("ERROR_NEGATIVE_CAPACITY\n");
-    }
+        case ERROR_NEGATIVE_CAPACITY:
+            printf("ERROR_NEGATIVE_CAPACITY\n");
+            break;
 
-    if (error_num == ERROR_SIZE_OVERFLOW) {
-        printf("ERROR_SIZE_OVERFLOW\n");
-    }
+        case ERROR_SIZE_OVERFLOW:
+            printf("ERROR_SIZE_OVERFLOW\n");
+            break;
 
-    if (error_num == ERROR_STACK_CANARY_BEGINING) {
-        printf("ERROR_STACK_CANARY_BEGINING\n");
-    }
+        case ERROR_STACK_CANARY_BEGINING:
+            printf("ERROR_STACK_CANARY_BEGINING\n");
+            break;
 
-    if (error_num == ERROR_STACK_CANARY_END) {
-        printf("ERROR_STACK_CANARY_END\n");
+        case ERROR_STACK_CANARY_END:
+            printf("ERROR_STACK_CANARY_END\n");
+            break;
+        
+        default:
+            ;
     }
 }
-
-bool isEqual (double x, double y) {
-    const double EPSILON = 1e-6;
-    return fabs (x - y) < EPSILON;
-}
-
 
 
 

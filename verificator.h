@@ -1,3 +1,6 @@
+#ifndef VERIFICATOR_H
+#define VERIFICATOR_H
+
 #include "stack_structs.h"
 
 enum ERRORS {
@@ -14,4 +17,5 @@ int stack_check(const stack_t* stk);
 void stack_dump(const stack_t* stk);
 int verificator(const stack_t* stk);
 void print_error(const stack_t* stk);
-bool isEqual (double x, double y);
+
+#endif //VERIFICATOR_H

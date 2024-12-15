@@ -3,54 +3,61 @@
 #include <math.h>
 #include "stack_create.h"
 
-int stack_constructor(stack_t* stk, int capacity) {
+int stack_ctor(stack_t* stk, int capacity) {
     
-    stk->data = (stack_elem_t*) calloc((size_t) capacity + 2, sizeof(stack_elem_t));
+    stk->data = (stack_elem_t*) calloc((size_t) capacity + 10 + 2 * (sizeof(unsigned long long) / sizeof(stack_elem_t)), sizeof(stack_elem_t));   
     
-    if (stk->data == NULL) {
-        return ERROR_STACK_NULL_POINTER;
-    }
+    *(stk->data) = 0xDEDBABA;
     
-    stk->size = 1;
-    stk->data[0] = 0xDEDBABA;
-    stk->capacity = capacity + 1;
+    stk->size = 0;
+    stk->capacity = capacity + 10;
+    stk->data = stk->data + sizeof(unsigned long long) / sizeof(stack_elem_t);      
+
     stk->data[stk->capacity] = 0xDEDDEAD;
     
     return 0;
 }
 
-int stack_destructor(stack_t* stk) {
+int stack_dtor(stack_t* stk) {
     
-    if (stk->data == NULL) {
-        return ERROR_STACK_NULL_POINTER;
-    }
-    
-    free(stk->data);
+    free(stk->data - sizeof(unsigned long long) / sizeof(stack_elem_t));
     
     stk->size = -1;
     stk->capacity = -1;
+    stk->data = stk->data - sizeof(unsigned long long) / sizeof(stack_elem_t);
     stk->data = NULL;
     
     return 0;
 }
 
-stack_elem_t* stack_capacity_check(stack_t* stk) {
+void stack_capacity_check(stack_t* stk) {
                                
-    stack_elem_t* stack_data = NULL;
     size_t data_size = 0;
 
-    stack_data = stk->data;
-    data_size = (size_t) (stk->capacity + 1) * sizeof(stack_elem_t);
+    data_size = (size_t) (stk->capacity) * sizeof(stack_elem_t) + 2 * sizeof(unsigned long long);  
 
     if (stk->size >= stk->capacity) {
-        data_size += sizeof(stack_elem_t);
-        stack_data = (stack_elem_t*) realloc(stk->data, (size_t) data_size);  
-        stk->capacity ++;
-        stack_data[stk->capacity] = stack_data[stk->capacity - 1];
-        stack_data[stk->capacity - 1] = 0;
+        
+        data_size += 10 * sizeof(stack_elem_t);
+        stk->data = (stack_elem_t*) realloc(stk->data - sizeof(unsigned long long) / sizeof(stack_elem_t), data_size);  
+        stk->data = stk->data + sizeof(unsigned long long) / sizeof(stack_elem_t);
+        stk->capacity += 10;
+        
+        stk->data[stk->capacity] = stk->data[stk->capacity - 10];
+        stk->data[stk->capacity - 10] = 0;
     }
 
-    return stack_data;
+    else if (stk->capacity - stk->size == 20) {
+        
+        stk->data[stk->capacity - 10] = stk->data[stk->capacity];
+        stk->data[stk->capacity] = 0;
+        
+        data_size -= 10 * sizeof(stack_elem_t);
+        stk->data = (stack_elem_t*) realloc(stk->data - sizeof(unsigned long long) / sizeof(stack_elem_t), data_size);
+        stk->data = stk->data + sizeof(unsigned long long) / sizeof(stack_elem_t);
+        stk->capacity -= 10;      
+    }
+    
 }
 
 

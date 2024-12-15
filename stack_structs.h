@@ -1,3 +1,6 @@
+#ifndef STACK_STRUCTS_H
+#define STACK_STRUCTS_H
+
 typedef double stack_elem_t;
 
 typedef struct Stack {
@@ -6,4 +9,4 @@ typedef struct Stack {
     int capacity;
 } stack_t;
 
-
+#endif //STACK_STRUCTS_H
