@@ -35,11 +35,11 @@ int stack_check(const stack_t* stk) {
         return ERROR_SIZE_OVERFLOW;
     }
 
-    if (*(stk->data - sizeof(unsigned long long) / sizeof(stack_elem_t)) != 0xDEDBABA) {   //*((unsigned long long*) (stk->data - sizeof(unsigned long long) / sizeof(stack_elem_t)))
+    if (int(*(stk->data - sizeof(unsigned long long) / sizeof(stack_elem_t))) != 0xDEDBABA) {   //*((unsigned long long*) (stk->data - sizeof(unsigned long long) / sizeof(stack_elem_t)))
         return ERROR_STACK_CANARY_BEGINING;
     }
 
-    if ((stk->data[stk->capacity]) !=  0xDEDDEAD) {
+    if (int((stk->data[stk->capacity])) !=  0xDEDDEAD) {
         return ERROR_STACK_CANARY_END;
     }
 
@@ -48,9 +48,10 @@ int stack_check(const stack_t* stk) {
 
 void stack_dump(const stack_t* stk) {
     print_error(stk);
-    printf("stack_data: %p\n", (stk->data));
-    printf("stack_size: %d\n", (stk->size));
-    printf("stack_capacity: %d\n", (stk->capacity));
+    printf("*******STACK DUMP*********\n");
+    printf("    stack_data: %p\n", (stk->data));
+    printf("    stack_size: %d\n", (stk->size));
+    printf("    stack_capacity: %d\n", (stk->capacity));
 }
 
 void print_error(const stack_t* stk) {
