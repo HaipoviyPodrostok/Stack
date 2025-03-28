@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <math.h>
-#include "verificator.h"
+
+#include "stack.h"
 
 int verificator(const stack_t* stk) {
     
@@ -39,7 +40,7 @@ int stack_check(const stack_t* stk) {
         return ERROR_STACK_CANARY_BEGINING;
     }
 
-    if (int((stk->data[stk->capacity])) !=  0xDEDDEAD) {
+    if (int((stk->data[stk->capacity])) != 0xDEDDEAD) {
         return ERROR_STACK_CANARY_END;
     }
 
@@ -48,10 +49,13 @@ int stack_check(const stack_t* stk) {
 
 void stack_dump(const stack_t* stk) {
     print_error(stk);
-    printf("*******STACK DUMP*********\n");
-    printf("    stack_data: %p\n", (stk->data));
-    printf("    stack_size: %d\n", (stk->size));
-    printf("    stack_capacity: %d\n", (stk->capacity));
+    printf("+---------------------------------------+\n");
+    printf("|              STACK DUMP              |\n");
+    printf("+-------------------+------------------+\n");
+    printf("| stack_data        | %-16p |\n", stk->data);
+    printf("| stack_size        | %-16lu |\n", stk->size);
+    printf("| stack_capacity    | %-16lu |\n", stk->capacity);
+    printf("+-------------------+------------------+\n");
 }
 
 void print_error(const stack_t* stk) {
@@ -92,6 +96,3 @@ void print_error(const stack_t* stk) {
             ;
     }
 }
-
-
-

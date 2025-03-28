@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "stack_create.h"
+
+#include "stack.h"
 
 int stack_ctor(stack_t* stk, int capacity) {
     
@@ -43,7 +44,7 @@ void stack_capacity_check(stack_t* stk) {
         stk->data = stk->data + sizeof(unsigned long long) / sizeof(stack_elem_t);
         stk->capacity += 10;
         
-        stk->data[stk->capacity] = stk->data[stk->capacity - 10];
+        stk->data[stk->capacity] = stk->data[stk->capacity - 10]; // 
         stk->data[stk->capacity - 10] = 0;
     }
 
@@ -58,6 +59,11 @@ void stack_capacity_check(stack_t* stk) {
         stk->capacity -= 10;      
     }
     
+}
+
+bool isEqual (double x, double y) {
+    const double EPSILON = 1e-6;
+    return fabs (x - y) < EPSILON;
 }
 
 

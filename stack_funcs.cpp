@@ -1,7 +1,6 @@
 #include <stdio.h>
-#include "stack_funcs.h"
-#include "verificator.h"
-#include "stack_create.h"
+
+#include "stack.h"
 
 int stack_push(stack_t* stk, stack_elem_t value) {
     verificator(stk);
@@ -17,6 +16,11 @@ int stack_push(stack_t* stk, stack_elem_t value) {
 
 stack_elem_t stack_pop(stack_t* stk) {
     verificator(stk);
+
+    if (stk->size == 0) {
+        printf("Stack is empty!\n");
+        return EMPTY_STACK_ERROR;
+    }
 
     stack_elem_t stack_peak = 0;
     
