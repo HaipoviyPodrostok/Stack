@@ -1,34 +1,49 @@
 #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 
-#include "stack.h"
+#include "stack_funcs.h"
 
-int stack_ctor(stack_t* stk, int capacity) {
-    
-    stk->data = (stack_elem_t*) calloc((size_t) capacity + 10 + 2 * (sizeof(unsigned long long) / sizeof(stack_elem_t)), sizeof(stack_elem_t));   
-    
-    *(stk->data) = 0xDEDBABA;
-    
+static size_t calc_data_size(const size_t elem_size, const size_t capacity);
+
+stack_err_t stack_ctor(stack_t* const stk, const size_t elem_size, const size_t capacity) {
+    if (!stk) return STACK_ERR_NULL_PTR_ERROR;
+
+    const size_t data_size = calc_data_size(elem_size, capacity);
+
+    stk->raw_mem = calloc(data_size, elem_size);  //with canaries
+    if (!stk->raw_mem) return STACK_ERR_ALLOCATION_FAILED;
+
+    *((CANNARY_TYPE*) stk->raw_mem) = FIRST_CANNARY;
+
     stk->size = 0;
-    stk->capacity = capacity + 10;
-    stk->data = stk->data + sizeof(unsigned long long) / sizeof(stack_elem_t);      
+    stk->capacity = capacity + ALLOC_RESERVE;
+    stk->data = (void*) ((char*) stk->raw_mem + sizeof(CANNARY_TYPE));
 
-    stk->data[stk->capacity] = 0xDEDDEAD;
-    
-    return 0;
+    CANNARY_TYPE* last_cannary_ptr = (CANNARY_TYPE*) ((char*) stk->data + (elem_size * capacity));
+    *last_cannary_ptr= LAST_CANNARY;
+
+    return STACK_ERR_SUCCES;
 }
 
-int stack_dtor(stack_t* stk) {
-    
-    free(stk->data - sizeof(unsigned long long) / sizeof(stack_elem_t));
-    
-    stk->size = -1;
-    stk->capacity = -1;
-    stk->data = stk->data - sizeof(unsigned long long) / sizeof(stack_elem_t);
+stack_err_t stack_dtor(stack_t* const stk) {
+
+    free(stk->raw_mem);
+
+    stk->size = 0;
+    stk->capacity = 0;
+    stk->elem_size = 0;
     stk->data = NULL;
-    
-    return 0;
+    stk->raw_mem = NULL;
+
+    return STACK_ERR_SUCCES;
+}
+
+static size_t calc_data_size(const size_t elem_size, const size_t capacity) {
+    size_t data_size = elem_size * (capacity + ALLOC_RESERVE) + (sizeof(CANNARY_TYPE) * 2);
+    return data_size; 
 }
 
 void stack_capacity_check(stack_t* stk) {
@@ -60,10 +75,3 @@ void stack_capacity_check(stack_t* stk) {
     }
     
 }
-
-bool isEqual (double x, double y) {
-    const double EPSILON = 1e-6;
-    return fabs (x - y) < EPSILON;
-}
-
-
