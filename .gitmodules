@@ -1,0 +1,3 @@
+[submodule "libs/logger"]
+	path = libs/logger
+	url = git@github.com:HaipoviyPodrostok/logger.git
