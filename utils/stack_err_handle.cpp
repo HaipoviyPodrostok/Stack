@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+#include "stack_err_handle.h"
+
+#define CASE_ENUM_TO_STRING(error) case error: return #error
+
+const char* stack_error_str(stack_err_t error) {
+    switch(error) {
+        CASE_ENUM_TO_STRING(STACK_ERR_SUCCES);
+        CASE_ENUM_TO_STRING(STACK_ERR_DUMP_FAILED);
+        CASE_ENUM_TO_STRING(STACK_ERR_ALLOCATION_FAILED);
+        CASE_ENUM_TO_STRING(STACK_ERR_FILE_READING_FAILED);
+        CASE_ENUM_TO_STRING(STACK_ERR_FILE_OPEN_FAILED);
+        CASE_ENUM_TO_STRING(STACK_ERR_FILE_PRINT_FAILED);
+        CASE_ENUM_TO_STRING(STACK_ERR_NULL_PTR_ERROR);
+        CASE_ENUM_TO_STRING(STACK_ERR_FILE_CLOSE_FAILED);
+        CASE_ENUM_TO_STRING(STACK_ERR_STR_PRINT_FAILED);
+        CASE_ENUM_TO_STRING(STACK_ERR_INSERTION_FAILED);
+        CASE_ENUM_TO_STRING(STACK_ERR_INPUT_FILE_INCORRECT);
+        CASE_ENUM_TO_STRING(STACK_ERR_FILL_NODE_FAILED);
+        CASE_ENUM_TO_STRING(STACK_ERR_INPUT_SCAN_FAILED);
+        CASE_ENUM_TO_STRING(STACK_ERR_TOO_FEW_COMMAND_LINE_ARGUMENTS);
+        CASE_ENUM_TO_STRING(STACK_ERR_UNKNOWN_ERROR);
+        CASE_ENUM_TO_STRING(STACK_ERR_INCORRECT_STATUS);
+        default:
+            return "STACK_ERR_UNKNOWN_ERROR";
+        return "STACK_ERR_UNKNOWN_ERROR";
+    }
+}
+
+#undef CASE_ENUM_TO_STRING
+
+bool isEqual (double x, double y) {
+    const double EPSILON = 1e-6;
+    return fabs (x - y) < EPSILON;
+}

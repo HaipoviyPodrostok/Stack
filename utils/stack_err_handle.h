@@ -1,5 +1,5 @@
-#ifndef ERROR_HANDLING_H
-#define ERROR_HANDLING_H
+#ifndef STACK_ERR_HANDLE_H
+#define STACK_ERR_HANDLE_H
 
 #include <stdio.h>
 
@@ -33,4 +33,4 @@ typedef enum {
 
 bool isEqual (double x, double y);
 
-#endif //ERROR_HANDLING_H
+#endif //STACK_ERR_HANDLE_H
