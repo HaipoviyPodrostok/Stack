@@ -1,0 +1,16 @@
+[29-07-2025 18:12:55] [DEBUG] src/stack_funcs/stack_funcs.cpp:17, stack_ctor(): mem calloced
+[29-07-2025 18:12:55] [DEBUG] src/stack_funcs/stack_funcs.cpp:32, stack_ctor(): kfnjb
+[29-07-2025 18:12:55] [DEBUG] src/stack_funcs/stack_funcs.cpp:33, stack_ctor(): raw mem =0x7cec7cfe0080
+
+[29-07-2025 18:12:55] [DEBUG] src/stack_funcs/stack_funcs.cpp:34, stack_ctor(): data 0x7cec7cfe0088
+
+[29-07-2025 18:12:55] [DEBUG] src/stack_funcs/stack_funcs.cpp:35, stack_ctor():  last can ptr = 0x7cec7cfe0114
+
+[29-07-2025 18:21:31] [DEBUG] src/stack_funcs/stack_funcs.cpp:17, stack_ctor(): mem calloced
+[29-07-2025 18:21:31] [DEBUG] src/stack_funcs/stack_funcs.cpp:32, stack_ctor(): kfnjb
+[29-07-2025 18:21:31] [DEBUG] src/stack_funcs/stack_funcs.cpp:33, stack_ctor(): raw mem =0x7cb5d27e0080
+
+[29-07-2025 18:21:31] [DEBUG] src/stack_funcs/stack_funcs.cpp:34, stack_ctor(): data 0x7cb5d27e0088
+
+[29-07-2025 18:21:31] [DEBUG] src/stack_funcs/stack_funcs.cpp:35, stack_ctor():  last can ptr = 0x7cb5d27e0114
+

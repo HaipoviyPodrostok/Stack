@@ -3,10 +3,13 @@
 
 #include <stdio.h>
 
-#define ALLOC_RESERVE 10
+#define ALLOC_RESERVE 10 //cells
+
+#define CELL_SIZE 8 //bytes
+
 #define CANNARY_TYPE unsigned long long
-#define FIRST_CANNARY 0xDEDBABA
-#define LAST_CANNARY 0xDEDDEAD
+#define FIRST_CANNARY (CANNARY_TYPE) 0xDEDBABA
+#define LAST_CANNARY  (CANNARY_TYPE) 0xDEDDEAD
 
 typedef struct {
     void* raw_mem;

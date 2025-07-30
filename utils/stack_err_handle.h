@@ -3,10 +3,10 @@
 
 #include <stdio.h>
 
-#define ERROR_HANDLE(call_func, ...) ({                                             \
+#define STACK_ERROR(call_func, ...) ({                                              \
     stack_err_t error = call_func;                                                  \
     if (error) {                                                                    \
-        fprintf(stderr, "[" #call_func "] Error: %s\n", tree_error_str(error));     \
+        fprintf(stderr, "[" #call_func "] Error: %s\n", stack_error_str(error));     \
         __VA_ARGS__;                                                                \
         return error;                                                               \
     }                                                                               \
@@ -31,6 +31,6 @@ typedef enum {
     STACK_ERR_INCORRECT_STATUS = 15,
 } stack_err_t;
 
-bool isEqual (double x, double y);
+const char* stack_error_str(stack_err_t error);
 
 #endif //STACK_ERR_HANDLE_H

@@ -7,6 +7,7 @@ GREEN  = $(ESC)[32m
 
 ESC := $(shell printf '\033')
 
+PROJECT_NAME := stack
 
 ifeq ($(origin CC), default)
 	CC = g++
@@ -48,6 +49,8 @@ endif
 OUT_O_DIR ?= build
 SRC = ./src
 
+LOG_DIR ?= log
+
 INCLUDE_DIRS := $(shell find src src/stack_funcs src/verificator utils libs/logger/src libs/logger/utils -type d)
 COMMONINC := $(addprefix -I,$(INCLUDE_DIRS))
 CFLAGS += $(COMMONINC)
@@ -73,9 +76,9 @@ override LDFLAGS += $(LIB_DIR_FLAGS) $(LIB_LINK_FLAGS)
 
 
 .PHONY: all
-all: $(OUT_O_DIR)/logger.x
+all: $(OUT_O_DIR)/$(PROJECT_NAME).x
 
-$(OUT_O_DIR)/logger.x: $(COBJ)
+$(OUT_O_DIR)/$(PROJECT_NAME).x: $(COBJ)
 	@echo "$(GREEN)[LD ]$(RESET) $@"
 	@$(CC) $^ -o $@ $(LDFLAGS)
 
@@ -89,6 +92,9 @@ $(DEPS) : $(OUT_O_DIR)/%.d : %.cpp
 	@echo "$(GREEN)[DEP]$(RESET) $<"
 	@$(CC) -E $(CFLAGS) $< -MM -MT $(@:.d=.o) > $@
 
+.PHONY: rebuild
+rebuild: clean all
+
 .PHONY: clean
 clean:
 	rm -rf $(COBJ) $(DEPS) \
@@ -98,8 +104,13 @@ clean:
 	$(OUT_O_DIR)/*.d \
 	$(OUT_O_DIR)/*.o
 
-NODEPS = clean
+.PHONY: clean_log
+clean_log:
+	rm -rf $(LOG_DIR)/*
+
+NODEPS = clean clean_log
 
 ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
 include $(DEPS)
 endif
+

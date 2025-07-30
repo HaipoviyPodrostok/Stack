@@ -31,8 +31,3 @@ const char* stack_error_str(stack_err_t error) {
 }
 
 #undef CASE_ENUM_TO_STRING
-
-bool isEqual (double x, double y) {
-    const double EPSILON = 1e-6;
-    return fabs (x - y) < EPSILON;
-}
