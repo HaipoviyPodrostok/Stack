@@ -1,3 +1,5 @@
+PROJECT_NAME := stack
+
 # ANSI colors
 RESET  = $(ESC)[0m
 BOLD   = $(ESC)[1m
@@ -7,13 +9,15 @@ GREEN  = $(ESC)[32m
 
 ESC := $(shell printf '\033')
 
-PROJECT_NAME := stack
 
 ifeq ($(origin CC), default)
 	CC = g++
 endif
 
+# BUILD: debug or release
 BUILD ?= debug
+#MODE: exec or static
+MODE ?= exec
 
 COMMON_FLAGS ?= -std=c++17 -Wall -Wextra
 
@@ -34,9 +38,10 @@ DEBUG_FLAGS ?= -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall \
 			-Wno-old-style-cast -Wno-varargs -Wstack-protector -fcheck-new -fsized-deallocation \
 			-fstack-protector -fstrict-overflow -flto-odr-type-merging -fno-omit-frame-pointer \
 			-Wlarger-than=81920 -Wstack-usage=81920 -pie -fPIE -Werror=vla \
-			$(SANITAZER_FLAGS)
 
 RELEASE_FLAGS ?= -DNDEBUG -O2 -march=native -flto
+
+MAKEFLAGS += --no-print-directory
 
 ifeq ($(BUILD),debug)
 	CFLAGS = $(COMMON_FLAGS) $(DEBUG_FLAGS)
@@ -48,10 +53,9 @@ endif
 
 OUT_O_DIR ?= build
 SRC = ./src
-
 LOG_DIR ?= log
 
-INCLUDE_DIRS := $(shell find src src/stack_funcs src/verificator utils libs/logger/src libs/logger/utils -type d)
+INCLUDE_DIRS := $(shell find src src/stack_funcs utils libs/logger/src libs/logger/utils -type d)
 COMMONINC := $(addprefix -I,$(INCLUDE_DIRS))
 CFLAGS += $(COMMONINC)
 
@@ -76,9 +80,21 @@ override LDFLAGS += $(LIB_DIR_FLAGS) $(LIB_LINK_FLAGS)
 
 
 .PHONY: all
-all: $(OUT_O_DIR)/$(PROJECT_NAME).x
+all:
+ifeq ($(MODE), static)
+	@$(MAKE) $(OUT_O_DIR)/libstack.a
+else ifeq ($(MODE), exec)
+	@$(MAKE) $(OUT_O_DIR)/stack.x
+else
+	@echo "$(YELLOW)[WARN] Unknown MODE: $(MODE) — use 'static' or 'exec'$(RESET)"
+	@exit 1
+endif
 
-$(OUT_O_DIR)/$(PROJECT_NAME).x: $(COBJ)
+$(OUT_O_DIR)/libstack.a: $(COBJ)
+	@echo "$(GREEN)[LD ]$(RESET) $@"
+	@ar rcs $@ $^
+
+$(OUT_O_DIR)/stack.x: $(COBJ)
 	@echo "$(GREEN)[LD ]$(RESET) $@"
 	@$(CC) $^ -o $@ $(LDFLAGS)
 
@@ -93,7 +109,9 @@ $(DEPS) : $(OUT_O_DIR)/%.d : %.cpp
 	@$(CC) -E $(CFLAGS) $< -MM -MT $(@:.d=.o) > $@
 
 .PHONY: rebuild
-rebuild: clean all
+rebuild: 
+	@$(MAKE) clean
+	@$(MAKE) all
 
 .PHONY: clean
 clean:
@@ -108,7 +126,7 @@ clean:
 clean_log:
 	rm -rf $(LOG_DIR)/*
 
-NODEPS = clean clean_log
+NODEPS = clean clean_log rebuild
 
 ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
 include $(DEPS)

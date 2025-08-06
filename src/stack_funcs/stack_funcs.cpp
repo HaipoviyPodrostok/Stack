@@ -23,11 +23,11 @@ stack_err_t stack_ctor(stack_t* const stk, const size_t elem_size, const size_t 
     stk->raw_mem = calloc(1, data_size);  //first cannary ptr
     if (!stk->raw_mem) return STACK_ERR_ALLOCATION_FAILED;
 
-    stk->data = (void*) ((char*) stk->raw_mem + sizeof(CANNARY_TYPE));
+    stk->data = (void*) ((char*) stk->raw_mem + sizeof(CANARY_TYPE));
     
-    *((CANNARY_TYPE*) stk->raw_mem) = FIRST_CANNARY;
+    *((CANARY_TYPE*) stk->raw_mem) = FIRST_CANNARY;
 
-    CANNARY_TYPE* last_cannary_ptr = (CANNARY_TYPE*) stk_data_offset(stk, stk->capacity);
+    CANARY_TYPE* last_cannary_ptr = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
     *last_cannary_ptr = LAST_CANNARY;
 
     return STACK_ERR_SUCCES;
