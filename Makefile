@@ -61,7 +61,8 @@ CFLAGS += $(COMMONINC)
 
 ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
-CSRC = main.cpp src/stack_funcs/stack_funcs.cpp utils/stack_err_handle.cpp
+CSRC = main.cpp src/stack_funcs/stack_funcs.cpp utils/stack_err_handle.cpp \
+	   src/verificator/verificator.cpp
 
 COBJ := $(addprefix $(OUT_O_DIR)/, $(CSRC:.cpp=.o))
 DEPS = $(COBJ:.o=.d)
@@ -115,16 +116,16 @@ rebuild:
 
 .PHONY: clean
 clean:
-	rm -rf $(COBJ) $(DEPS) \
-	$(OUT_O_DIR)/*.x \
-	$(OUT_O_DIR)/*.a \
-	$(OUT_O_DIR)/*.log \
-	$(OUT_O_DIR)/*.d \
-	$(OUT_O_DIR)/*.o
+	rm -rf ./$(COBJ) ./$(DEPS) \
+	./$(OUT_O_DIR)/*.x \
+	./$(OUT_O_DIR)/*.a \
+	./$(OUT_O_DIR)/*.log \
+	./$(OUT_O_DIR)/*.d \
+	./$(OUT_O_DIR)/*.o
 
 .PHONY: clean_log
 clean_log:
-	rm -rf $(LOG_DIR)/*
+	rm -rf ./$(LOG_DIR)/*
 
 NODEPS = clean clean_log rebuild
 

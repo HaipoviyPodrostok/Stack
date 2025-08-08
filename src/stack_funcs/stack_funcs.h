@@ -4,6 +4,7 @@
 #include "stack_err_handle.h"
 #include "stack_structs.h"
 #include "logger.h"
+#include "verificator.h"
 
 stack_err_t stack_ctor(stack_t* const stk,     const char* stk_name,
                        const size_t elem_size, const size_t capacity);

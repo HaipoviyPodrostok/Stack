@@ -9,23 +9,27 @@
 
 #define THRESHOLD_OF_LINEAR_CAPACITY_GROWTH 100
 #define ADDED_CELLS 10
+#define CELL_SIZE(elem_size) ((elem_size + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT
+#define MAX_CAPACITY(cell_size) \
+        (MAX_STK_SIZE - sizeof(LEFT_CANARY) - sizeof(RIGHT_CANARY)) / cell_size
 
 static stack_err_t stack_overflow_check(stack_t* stk);
+static stack_err_t realloc_stack_init(stack_t* stk, const size_t new_capacity);
 
 stack_err_t stack_ctor(stack_t* const stk,     const char* stk_name,
                        const size_t elem_size, const size_t capacity) {
-    
-    if (!stk) return STACK_ERR_NULL_PTR_ERROR;
-    
+    if (!stk)                   return STACK_ERR_NULL_PTR_ERROR;
+    if (elem_size == 0)         return STACK_ERR_INCORRECT_CELL_SIZE;
+    if (capacity < MIN_STK_CAP) return STACK_ERR_TOO_SMALL_CAPACITY;
+
     strncpy(stk->name, stk_name, DEFAULT_STR_LEN);
     stk->name[DEFAULT_STR_LEN - 1] = '\0';
-
     stk->size = 0;
     stk->elem_size = elem_size;
-    stk->capacity = capacity + ALLOC_RESERVE;
+    stk->capacity = capacity;
     stk->cell_size = CELL_SIZE(elem_size);
 
-    const size_t data_size = DATA_SIZE(stk->capacity);
+    const size_t data_size = DATA_SIZE(stk->cell_size, stk->capacity);
 
     stk->raw_mem = calloc(1, data_size);  //first canary ptr
     if (!stk->raw_mem) return STACK_ERR_ALLOCATION_FAILED;
@@ -55,6 +59,12 @@ void stack_dtor(stack_t* const stk) {
 stack_err_t stack_push(stack_t* const stk, const void* const value) {
     if (!stk) return STACK_ERR_NULL_PTR_ERROR;
     
+    if (stack_overflow_check(stk) != STACK_ERR_SUCCESS) {
+        return STACK_ERR_STK_REALLOC_FAILED;
+    }
+
+    stack_dump(stk);
+
     void* stk_peak = stk_data_offset(stk, stk->size);
     memcpy(stk_peak, value, stk->elem_size);
 
@@ -85,31 +95,66 @@ void* stk_data_offset(const stack_t* const stk, const size_t offset_size) {
     return base + offset_size * stk->cell_size;
 }
 
-static stack_err_t stack_overflow_check(stack_t* stk) { //TODO канарейки + дата 
+static stack_err_t stack_overflow_check(stack_t* stk) {
     assert(stk);
 
-    stack_t* new_stk = NULL;
-    size_t new_stk_size = 0;
+    size_t new_capacity = 0;
 
-    if (stk->capacity <= THRESHOLD_OF_LINEAR_CAPACITY_GROWTH) {
-        if (stk->size >= stk->capacity) {
-            new_stk_size = DATA_SIZE(stk->capacity + ADDED_CELLS);
-        }
-        else if ((stk->capacity - stk->size) >= 2 * ALLOC_RESERVE) {
-            new_stk_size = DATA_SIZE(stk->capacity + ADDED_CELLS);   
-        }
-    } else {
-        if (stk->size >= stk->capacity) {
-            new_stk_size = DATA_SIZE(stk->capacity * 2);
-        }
+    if (stk->capacity > MIN_STK_CAP) {
+        if (stk->capacity <= THRESHOLD_OF_LINEAR_CAPACITY_GROWTH) {
+            if (stk->size >= stk->capacity) {
+                new_capacity = stk->capacity + ADDED_CELLS;
+                if (DATA_SIZE(stk->cell_size, new_capacity) > MAX_STK_SIZE) {
+                    new_capacity = MAX_CAPACITY(stk->cell_size);
+                }
+                return realloc_stack_init(stk, new_capacity);
+            }
+            if ((stk->capacity - stk->size) >= ALLOC_RESERVE) {
+                new_capacity = stk->capacity - ADDED_CELLS;
+                if (new_capacity < MIN_STK_CAP) {
+                    new_capacity = MIN_STK_CAP;
+                }
+                return realloc_stack_init(stk, new_capacity);
+            }
+        } else {
+            if (stk->size >= stk->capacity) {
+                new_capacity = stk->capacity * 2;
+                if (DATA_SIZE(stk->cell_size, new_capacity) > MAX_STK_SIZE) {
+                    new_capacity = MAX_CAPACITY(stk->cell_size);
+                }
 
-        else if ((stk->capacity / stk->size) >= 2) {
-            new_stk_size = DATA_SIZE(stk->capacity / 2);
-        } 
+                return realloc_stack_init(stk, new_capacity);
+            }
+            if ((stk->capacity / stk->size) >= 2) {
+                new_capacity = stk->capacity / 2;          
+                if (new_capacity < MIN_STK_CAP) {
+                    new_capacity = MIN_STK_CAP;
+                }
+                return realloc_stack_init(stk, new_capacity);
+            } 
+        }
     }
 
-    new_stk = (stack_t*) realloc(stk, new_stk_size);
-    if (!new_stk) return STACK_ERR_ALLOCATION_FAILED;
+    return STACK_ERR_SUCCESS;
+}
+
+static stack_err_t realloc_stack_init(stack_t* stk, const size_t new_capacity) {
+    assert(stk);
+
+    void* new_raw_mem = NULL;
+
+    new_raw_mem = realloc(stk->raw_mem, DATA_SIZE(stk->cell_size, new_capacity));
+    if (!new_raw_mem) return STACK_ERR_ALLOCATION_FAILED;
+    stk->raw_mem = new_raw_mem;
+
+    stk->capacity = new_capacity;
+    
+    *((CANARY_TYPE*) stk->raw_mem) = LEFT_CANARY;
+
+    CANARY_TYPE* last_canary_ptr = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
+    *last_canary_ptr = RIGHT_CANARY;
+
+    stk->data = (void*) ((char*) stk->raw_mem + sizeof(CANARY_TYPE));
 
     return STACK_ERR_SUCCESS;
 }

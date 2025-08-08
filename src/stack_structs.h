@@ -6,14 +6,14 @@
 #define ALLOC_RESERVE 20 //cells
 #define DEFAULT_STR_LEN 50 
 
+#define MAX_STK_SIZE 1048576 //1 MB
 #define ALIGNMENT 8 //bytes, multiple of 8
-#define CELL_SIZE(elem_size) ((elem_size + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT
-
-#define CANARY_TYPE unsigned long long
+#define CANARY_TYPE unsigned long long // must be multiple of 8
 #define LEFT_CANARY (CANARY_TYPE) 0xDEDBABA
 #define RIGHT_CANARY  (CANARY_TYPE) 0xDEDDEAD
+#define MIN_STK_CAP 10
 
-#define DATA_SIZE(cell_num) stk->cell_size * cell_num \
+#define DATA_SIZE(cell_size, cell_num) cell_size * cell_num \
                              + sizeof(LEFT_CANARY)    \
                              + sizeof(RIGHT_CANARY)
 
@@ -26,8 +26,5 @@ typedef struct {
     size_t capacity;
     size_t cell_size;
 } stack_t;
-
-
-
 
 #endif //STACK_STRUCTS_H

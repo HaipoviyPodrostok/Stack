@@ -29,6 +29,9 @@ typedef enum {
     STACK_ERR_TOO_FEW_COMMAND_LINE_ARGUMENTS = 13,
     STACK_ERR_UNKNOWN_ERROR = 14,
     STACK_ERR_INCORRECT_STATUS = 15,
+    STACK_ERR_INCORRECT_CELL_SIZE = 16,
+    STACK_ERR_TOO_SMALL_CAPACITY = 17,
+    STACK_ERR_STK_REALLOC_FAILED = 18,
 } stack_err_t;
 
 const char* stack_error_str(stack_err_t error);

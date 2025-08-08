@@ -6,11 +6,7 @@
 #include "logger.h"
 #include "stack_funcs.h"
 
-stack_err_t verificator(stack_t* const) {
-    
-}
-
-stack_err_t stack_dump(const stack_t* const stk) {
+stack_err_t stack_dump(stack_t* const stk) {
     if (!stk) return STACK_ERR_NULL_PTR_ERROR;
 
     LOG(INFO, LOG_INFO, "\n"
