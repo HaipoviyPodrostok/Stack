@@ -55,7 +55,7 @@ OUT_O_DIR ?= build
 SRC = ./src
 LOG_DIR ?= log
 
-INCLUDE_DIRS := $(shell find src src/stack_funcs utils libs/logger/src libs/logger/utils -type d)
+INCLUDE_DIRS := $(shell find src src/stack_funcs src/verificator utils libs/logger/src libs/logger/utils -type d)
 COMMONINC := $(addprefix -I,$(INCLUDE_DIRS))
 CFLAGS += $(COMMONINC)
 

@@ -5,19 +5,33 @@
 #include "stack_structs.h"
 #include "stack_funcs.h"
 
-int main() {   //makefile поменять чтобы можно было менять проект/библиотека
-    LOGGER_ERROR(log_open("log/ctor.log"));
+int main() {
+    LOGGER_ERROR(log_open("ctor.log"));
     
     stack_t stack = {};
 
-    STACK_ERROR(stack_ctor(&stack, 4, 10));
+    typedef struct {
+        int gei;
+        double pidor;
+        size_t hui;
+    } cell_t;
+
+    STACK_ERROR(stack_ctor(&stack, "stack 1", sizeof(cell_t), 10));
     
-    int value = 10;
-    STACK_ERROR(stack_push(&stack, &value));
-    value = 0;
+    cell_t first_cell = {};
+    first_cell.gei = 10;
+    first_cell.pidor = 10.11;
+    first_cell.hui = 20;
     
-    int peak = 0;
-    STACK_ERROR(stack_pop(&stack, &peak));
+    STACK_ERROR(stack_push(&stack, &first_cell));
+
+    
+    cell_t popa = {};
+
+    stack_pop(&stack, &popa);
+    printf("%d\n", popa.gei);
+    printf("%lg\n", popa.pidor);
+    printf("%lu\n", popa.hui);
 
     stack_dtor(&stack);
     

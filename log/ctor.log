@@ -14,3 +14,30 @@
 
 [29-07-2025 18:21:31] [DEBUG] src/stack_funcs/stack_funcs.cpp:35, stack_ctor():  last can ptr = 0x7cb5d27e0114
 
+[07-08-2025 02:08:03] [DEBUG] src/stack_funcs/stack_funcs.cpp:52, stack_push(): stk 0x7fff27f61940
+[07-08-2025 02:08:03] [DEBUG] src/stack_funcs/stack_funcs.cpp:55, stack_push(): stk_peak 0x7bc0a3fe0018
+[07-08-2025 02:08:03] [DEBUG] src/stack_funcs/stack_funcs.cpp:60, stack_push(): padding 0x7bc0a3fe001c
+[07-08-2025 02:11:06] [DEBUG] src/stack_funcs/stack_funcs.cpp:52, stack_push(): stk 0x7fff38f93fb0
+[07-08-2025 02:11:06] [DEBUG] src/stack_funcs/stack_funcs.cpp:55, stack_push(): stk_peak 0x7b59d3de0018
+[07-08-2025 02:11:06] [DEBUG] src/stack_funcs/stack_funcs.cpp:60, stack_push(): padding 0x7b59d3de001c
+[07-08-2025 02:11:06] [DEBUG] src/stack_funcs/stack_funcs.cpp:61, stack_push(): cell_size 0x1
+[07-08-2025 02:11:06] [DEBUG] src/stack_funcs/stack_funcs.cpp:62, stack_push(): elem_size 0x4
+[07-08-2025 02:12:07] [DEBUG] src/stack_funcs/stack_funcs.cpp:52, stack_push(): stk 0x7ffc663d0a40
+[07-08-2025 02:12:07] [DEBUG] src/stack_funcs/stack_funcs.cpp:55, stack_push(): stk_peak 0x7ce8f4fe0048
+[07-08-2025 02:12:07] [DEBUG] src/stack_funcs/stack_funcs.cpp:60, stack_push(): padding 0x7ce8f4fe004c
+[07-08-2025 02:12:07] [DEBUG] src/stack_funcs/stack_funcs.cpp:61, stack_push(): cell_size 0x8
+[07-08-2025 02:12:07] [DEBUG] src/stack_funcs/stack_funcs.cpp:62, stack_push(): elem_size 0x4
+[07-08-2025 02:13:21] [DEBUG] src/stack_funcs/stack_funcs.cpp:52, stack_push(): stk 0x7ffd0911d1b0
+[07-08-2025 02:13:21] [DEBUG] src/stack_funcs/stack_funcs.cpp:55, stack_push(): stk_peak 0x7ca7b7fe0048
+[07-08-2025 02:13:21] [DEBUG] src/stack_funcs/stack_funcs.cpp:60, stack_push(): padding 0x7ca7b7fe004c
+[07-08-2025 02:13:21] [DEBUG] src/stack_funcs/stack_funcs.cpp:61, stack_push(): cell_size 0x8
+[07-08-2025 02:13:21] [DEBUG] src/stack_funcs/stack_funcs.cpp:62, stack_push(): elem_size 0x4
+[07-08-2025 02:15:30] [DEBUG] src/stack_funcs/stack_funcs.cpp:52, stack_push(): stk 0x7fff13b81740
+[07-08-2025 02:15:30] [DEBUG] src/stack_funcs/stack_funcs.cpp:55, stack_push(): stk_peak 0x7ce6933e0048
+[07-08-2025 02:17:51] [DEBUG] src/stack_funcs/stack_funcs.cpp:52, stack_push(): stk 0x7ffe4d35bc80
+[07-08-2025 02:17:51] [DEBUG] src/stack_funcs/stack_funcs.cpp:55, stack_push(): stk_peak 0x7ce5bc5e0048
+[07-08-2025 02:29:21] [DEBUG] src/stack_funcs/stack_funcs.cpp:57, stack_push(): elem = 
+[07-08-2025 02:29:21] [DEBUG] src/stack_funcs/stack_funcs.cpp:58, stack_push(): cell = 
+[07-08-2025 02:30:59] [DEBUG] src/stack_funcs/stack_funcs.cpp:57, stack_push(): elem = 
+[07-08-2025 02:30:59] [DEBUG] src/stack_funcs/stack_funcs.cpp:58, stack_push(): cell = 
+[07-08-2025 23:41:02] [DEBUG] src/stack_funcs/stack_funcs.cpp:17, stack_ctor(): 
