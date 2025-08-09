@@ -32,11 +32,11 @@ stack_err_t stack_dump(stack_t* const stk) {
     size_t left_canary  = LEFT_CANARY;
     size_t right_canary = RIGHT_CANARY;
     
-        LOG(INFO, NO_LOG_INFO, "\n"
-        "Left canary:  %p   (Expected: %p)                                          \n"
-        "Right canary  %p   (Expected: %p)                                          \n",
-        stk->raw_mem,                        left_canary,
-        stk_data_offset(stk, stk->capacity), right_canary);
+        LOG(INFO, NO_LOG_INFO,
+        "Left canary:  %lx   (Expected: %lx)                                         \n"
+        "Right canary  %lx   (Expected: %lx)                                         \n",
+        *((CANARY_TYPE*) (stk->raw_mem)),    left_canary,
+        *((CANARY_TYPE*) (stk_data_offset(stk, stk->capacity))), right_canary);
 
     return STACK_ERR_SUCCESS;
 }

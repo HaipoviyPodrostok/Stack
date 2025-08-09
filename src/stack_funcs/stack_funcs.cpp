@@ -100,7 +100,7 @@ static stack_err_t stack_overflow_check(stack_t* stk) {
 
     size_t new_capacity = 0;
 
-    if (stk->capacity > MIN_STK_CAP) {
+    if (stk->capacity >= MIN_STK_CAP) {
         if (stk->capacity <= THRESHOLD_OF_LINEAR_CAPACITY_GROWTH) {
             if (stk->size >= stk->capacity) {
                 new_capacity = stk->capacity + ADDED_CELLS;

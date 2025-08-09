@@ -47,6 +47,11 @@ int main() {
     stack_push(&stack, &struct_three);
     stack_push(&stack, &struct_three);
     stack_push(&stack, &struct_three);
+    stack_push(&stack, &struct_three);
+    stack_push(&stack, &struct_three);
+    stack_push(&stack, &struct_three);
+    stack_push(&stack, &struct_three);
+    stack_push(&stack, &struct_three);
 
     stack_pop(&stack, &popa);
     stack_pop(&stack, &popa);
