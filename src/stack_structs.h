@@ -13,8 +13,8 @@
 #define RIGHT_CANARY  (CANARY_TYPE) 0xDEDDEAD
 #define MIN_STK_CAP 10
 
-#define DATA_SIZE(cell_size, cell_num) cell_size * cell_num \
-                             + sizeof(LEFT_CANARY)    \
+#define RAW_MEM_SIZE(cell_size, cell_num) cell_size * cell_num \
+                             + align_up (sizeof(LEFT_CANARY), ALIGNMENT)    \
                              + sizeof(RIGHT_CANARY)
 
 typedef struct {

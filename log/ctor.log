@@ -922,3 +922,171 @@ Cell size:    24
 Left canary:  dedbaba   (Expected: dedbaba)                                         
 Right canary  bebebebebebebebe   (Expected: deddead)                                         
 
+[10-08-2025 22:32:15] [INFO] src/verificator/verificator.cpp:21, stack_dump(): 
+============================== STACK DUMP =================================
+Stack name:   stack 1                                                           
+Stack ptr:    0x7ffc61ca4a00                                                           
+Raw mem:      0x7c9dc0be0040                                                           
+Data:         0x7c9dc0be0048                                                           
+Elem size:    24                                                          
+Current size: 0                                                          
+Capacity:     10                                                          
+Cell size:    24                                                          
+
+Left canary:  dedbaba   (Expected: dedbaba)                                         
+Right canary  deddead   (Expected: deddead)                                         
+
+[10-08-2025 22:32:15] [INFO] src/verificator/verificator.cpp:21, stack_dump(): 
+============================== STACK DUMP =================================
+Stack name:   stack 1                                                           
+Stack ptr:    0x7ffc61ca4a00                                                           
+Raw mem:      0x7c9dc0be0040                                                           
+Data:         0x7c9dc0be0048                                                           
+Elem size:    24                                                          
+Current size: 0                                                          
+Capacity:     10                                                          
+Cell size:    24                                                          
+
+Left canary:  dedbaba   (Expected: dedbaba)                                         
+Right canary  deddead   (Expected: deddead)                                         
+
+[10-08-2025 22:32:15] [INFO] src/verificator/verificator.cpp:21, stack_dump(): 
+============================== STACK DUMP =================================
+Stack name:   stack 1                                                           
+Stack ptr:    0x7ffc61ca4a00                                                           
+Raw mem:      0x7c9dc0be0040                                                           
+Data:         0x7c9dc0be0048                                                           
+Elem size:    24                                                          
+Current size: 1                                                          
+Capacity:     10                                                          
+Cell size:    24                                                          
+
+Left canary:  dedbaba   (Expected: dedbaba)                                         
+Right canary  deddead   (Expected: deddead)                                         
+
+[10-08-2025 22:32:15] [INFO] src/verificator/verificator.cpp:21, stack_dump(): 
+============================== STACK DUMP =================================
+Stack name:   stack 1                                                           
+Stack ptr:    0x7ffc61ca4a00                                                           
+Raw mem:      0x7c9dc0be0040                                                           
+Data:         0x7c9dc0be0048                                                           
+Elem size:    24                                                          
+Current size: 2                                                          
+Capacity:     10                                                          
+Cell size:    24                                                          
+
+Left canary:  dedbaba   (Expected: dedbaba)                                         
+Right canary  deddead   (Expected: deddead)                                         
+
+[10-08-2025 22:32:15] [INFO] src/verificator/verificator.cpp:21, stack_dump(): 
+============================== STACK DUMP =================================
+Stack name:   stack 1                                                           
+Stack ptr:    0x7ffc61ca4a00                                                           
+Raw mem:      0x7c9dc0be0040                                                           
+Data:         0x7c9dc0be0048                                                           
+Elem size:    24                                                          
+Current size: 3                                                          
+Capacity:     10                                                          
+Cell size:    24                                                          
+
+Left canary:  dedbaba   (Expected: dedbaba)                                         
+Right canary  deddead   (Expected: deddead)                                         
+
+[10-08-2025 22:32:15] [INFO] src/verificator/verificator.cpp:21, stack_dump(): 
+============================== STACK DUMP =================================
+Stack name:   stack 1                                                           
+Stack ptr:    0x7ffc61ca4a00                                                           
+Raw mem:      0x7c9dc0be0040                                                           
+Data:         0x7c9dc0be0048                                                           
+Elem size:    24                                                          
+Current size: 4                                                          
+Capacity:     10                                                          
+Cell size:    24                                                          
+
+Left canary:  dedbaba   (Expected: dedbaba)                                         
+Right canary  deddead   (Expected: deddead)                                         
+
+[10-08-2025 22:32:15] [INFO] src/verificator/verificator.cpp:21, stack_dump(): 
+============================== STACK DUMP =================================
+Stack name:   stack 1                                                           
+Stack ptr:    0x7ffc61ca4a00                                                           
+Raw mem:      0x7c9dc0be0040                                                           
+Data:         0x7c9dc0be0048                                                           
+Elem size:    24                                                          
+Current size: 5                                                          
+Capacity:     10                                                          
+Cell size:    24                                                          
+
+Left canary:  dedbaba   (Expected: dedbaba)                                         
+Right canary  deddead   (Expected: deddead)                                         
+
+[10-08-2025 22:32:15] [INFO] src/verificator/verificator.cpp:21, stack_dump(): 
+============================== STACK DUMP =================================
+Stack name:   stack 1                                                           
+Stack ptr:    0x7ffc61ca4a00                                                           
+Raw mem:      0x7c9dc0be0040                                                           
+Data:         0x7c9dc0be0048                                                           
+Elem size:    24                                                          
+Current size: 6                                                          
+Capacity:     10                                                          
+Cell size:    24                                                          
+
+Left canary:  dedbaba   (Expected: dedbaba)                                         
+Right canary  deddead   (Expected: deddead)                                         
+
+[10-08-2025 22:32:15] [INFO] src/verificator/verificator.cpp:21, stack_dump(): 
+============================== STACK DUMP =================================
+Stack name:   stack 1                                                           
+Stack ptr:    0x7ffc61ca4a00                                                           
+Raw mem:      0x7c9dc0be0040                                                           
+Data:         0x7c9dc0be0048                                                           
+Elem size:    24                                                          
+Current size: 7                                                          
+Capacity:     10                                                          
+Cell size:    24                                                          
+
+Left canary:  dedbaba   (Expected: dedbaba)                                         
+Right canary  deddead   (Expected: deddead)                                         
+
+[10-08-2025 22:32:15] [INFO] src/verificator/verificator.cpp:21, stack_dump(): 
+============================== STACK DUMP =================================
+Stack name:   stack 1                                                           
+Stack ptr:    0x7ffc61ca4a00                                                           
+Raw mem:      0x7c9dc0be0040                                                           
+Data:         0x7c9dc0be0048                                                           
+Elem size:    24                                                          
+Current size: 8                                                          
+Capacity:     10                                                          
+Cell size:    24                                                          
+
+Left canary:  dedbaba   (Expected: dedbaba)                                         
+Right canary  deddead   (Expected: deddead)                                         
+
+[10-08-2025 22:32:15] [INFO] src/verificator/verificator.cpp:21, stack_dump(): 
+============================== STACK DUMP =================================
+Stack name:   stack 1                                                           
+Stack ptr:    0x7ffc61ca4a00                                                           
+Raw mem:      0x7c9dc0be0040                                                           
+Data:         0x7c9dc0be0048                                                           
+Elem size:    24                                                          
+Current size: 9                                                          
+Capacity:     10                                                          
+Cell size:    24                                                          
+
+Left canary:  dedbaba   (Expected: dedbaba)                                         
+Right canary  deddead   (Expected: deddead)                                         
+
+[10-08-2025 22:32:15] [INFO] src/verificator/verificator.cpp:21, stack_dump(): 
+============================== STACK DUMP =================================
+Stack name:   stack 1                                                           
+Stack ptr:    0x7ffc61ca4a00                                                           
+Raw mem:      0x7c9dc0be0040                                                           
+Data:         0x7c9dc0be0048                                                           
+Elem size:    24                                                          
+Current size: 10                                                          
+Capacity:     10                                                          
+Cell size:    24                                                          
+
+Left canary:  dedbaba   (Expected: dedbaba)                                         
+Right canary  deddead   (Expected: deddead)                                         
+

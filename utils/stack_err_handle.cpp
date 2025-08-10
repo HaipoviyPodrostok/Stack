@@ -27,6 +27,7 @@ const char* stack_error_str(stack_err_t error) {
         CASE_ENUM_TO_STRING(STACK_ERR_INCORRECT_CELL_SIZE);
         CASE_ENUM_TO_STRING(STACK_ERR_TOO_SMALL_CAPACITY);
         CASE_ENUM_TO_STRING(STACK_ERR_STK_REALLOC_FAILED);
+        CASE_ENUM_TO_STRING(STACK_ERR_STK_OVERFLOW_ERROR);
         default:
             return "STACK_ERR_UNKNOWN_ERROR";
         return "STACK_ERR_UNKNOWN_ERROR";

@@ -6,6 +6,15 @@
 #include "logger.h"
 #include "stack_funcs.h"
 
+// stack_err_t stack_verificator(stack_t* const stk) {
+//     if (!stk) return STACK_ERR_NULL_PTR_ERROR;
+
+//     if (stk->size > stk->capacity) return STACK_ERR_STK_OVERFLOW_ERROR;
+
+
+
+// }
+
 stack_err_t stack_dump(stack_t* const stk) {
     if (!stk) return STACK_ERR_NULL_PTR_ERROR;
 

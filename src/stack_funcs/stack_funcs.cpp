@@ -4,10 +4,11 @@
 #include <math.h>
 #include <assert.h>
 #include <string.h>
+#include <stddef.h>
 
 #include "stack_funcs.h"
 
-#define THRESHOLD_OF_LINEAR_CAPACITY_GROWTH 100
+#define LINEAR_THR 100
 #define ADDED_CELLS 10
 #define CELL_SIZE(elem_size) ((elem_size + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT
 #define MAX_CAPACITY(cell_size) \
@@ -15,6 +16,7 @@
 
 static stack_err_t stack_overflow_check(stack_t* stk);
 static stack_err_t realloc_stack_init(stack_t* stk, const size_t new_capacity);
+static inline size_t align_up(size_t size, size_t align);
 
 stack_err_t stack_ctor(stack_t* const stk,     const char* stk_name,
                        const size_t elem_size, const size_t capacity) {
@@ -29,14 +31,16 @@ stack_err_t stack_ctor(stack_t* const stk,     const char* stk_name,
     stk->capacity = capacity;
     stk->cell_size = CELL_SIZE(elem_size);
 
-    const size_t data_size = DATA_SIZE(stk->cell_size, stk->capacity);
+    const size_t data_size = RAW_MEM_SIZE(stk->cell_size, stk->capacity);
 
     stk->raw_mem = calloc(1, data_size);  //first canary ptr
     if (!stk->raw_mem) return STACK_ERR_ALLOCATION_FAILED;
-
     stk->data = (void*) ((char*) stk->raw_mem + sizeof(CANARY_TYPE));
-    
+
     *((CANARY_TYPE*) stk->raw_mem) = LEFT_CANARY;
+    
+    stk->data = (void*) ((char*) stk->raw_mem 
+                               + align_up(sizeof(CANARY_TYPE), ALIGNMENT));
 
     CANARY_TYPE* last_canary_ptr = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
     *last_canary_ptr = RIGHT_CANARY;
@@ -101,16 +105,19 @@ static stack_err_t stack_overflow_check(stack_t* stk) {
     size_t new_capacity = 0;
 
     if (stk->capacity >= MIN_STK_CAP) {
-        if (stk->capacity <= THRESHOLD_OF_LINEAR_CAPACITY_GROWTH) {
+        if (stk->capacity <= LINEAR_THR) {                      // Threshold of linear/exponential growth
             if (stk->size >= stk->capacity) {
                 new_capacity = stk->capacity + ADDED_CELLS;
-                if (DATA_SIZE(stk->cell_size, new_capacity) > MAX_STK_SIZE) {
+                if (RAW_MEM_SIZE(stk->cell_size, new_capacity) > MAX_STK_SIZE) {
                     new_capacity = MAX_CAPACITY(stk->cell_size);
                 }
                 return realloc_stack_init(stk, new_capacity);
             }
             if ((stk->capacity - stk->size) >= ALLOC_RESERVE) {
                 new_capacity = stk->capacity - ADDED_CELLS;
+                if (new_capacity < stk->size) {
+                    new_capacity = stk->size;
+                }
                 if (new_capacity < MIN_STK_CAP) {
                     new_capacity = MIN_STK_CAP;
                 }
@@ -119,14 +126,16 @@ static stack_err_t stack_overflow_check(stack_t* stk) {
         } else {
             if (stk->size >= stk->capacity) {
                 new_capacity = stk->capacity * 2;
-                if (DATA_SIZE(stk->cell_size, new_capacity) > MAX_STK_SIZE) {
+                if (RAW_MEM_SIZE(stk->cell_size, new_capacity) > MAX_STK_SIZE) {
                     new_capacity = MAX_CAPACITY(stk->cell_size);
                 }
-
                 return realloc_stack_init(stk, new_capacity);
             }
-            if ((stk->capacity / stk->size) >= 2) {
+            if (stk->capacity >= 2 * stk->size) {
                 new_capacity = stk->capacity / 2;          
+                if (new_capacity < stk->size) {
+                    new_capacity = stk->size;
+                }
                 if (new_capacity < MIN_STK_CAP) {
                     new_capacity = MIN_STK_CAP;
                 }
@@ -141,20 +150,27 @@ static stack_err_t stack_overflow_check(stack_t* stk) {
 static stack_err_t realloc_stack_init(stack_t* stk, const size_t new_capacity) {
     assert(stk);
 
-    void* new_raw_mem = NULL;
+    if (new_capacity == stk->capacity) {
+        void* new_raw_mem = NULL;
 
-    new_raw_mem = realloc(stk->raw_mem, DATA_SIZE(stk->cell_size, new_capacity));
-    if (!new_raw_mem) return STACK_ERR_ALLOCATION_FAILED;
-    stk->raw_mem = new_raw_mem;
+        new_raw_mem = realloc(stk->raw_mem, RAW_MEM_SIZE(stk->cell_size, new_capacity));
+        if (!new_raw_mem) return STACK_ERR_ALLOCATION_FAILED;
+        stk->raw_mem = new_raw_mem;
 
-    stk->capacity = new_capacity;
-    
-    *((CANARY_TYPE*) stk->raw_mem) = LEFT_CANARY;
-
-    CANARY_TYPE* last_canary_ptr = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
-    *last_canary_ptr = RIGHT_CANARY;
-
-    stk->data = (void*) ((char*) stk->raw_mem + sizeof(CANARY_TYPE));
+        stk->capacity = new_capacity;
+        
+        *((CANARY_TYPE*) stk->raw_mem) = LEFT_CANARY;
+        
+        stk->data = (void*) ((char*) stk->raw_mem 
+        + align_up(sizeof(CANARY_TYPE), ALIGNMENT));
+        
+        CANARY_TYPE* last_canary_ptr = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
+        *last_canary_ptr = RIGHT_CANARY;
+    }
 
     return STACK_ERR_SUCCESS;
+}
+
+static inline size_t align_up(size_t size, size_t align) {
+    return (size + (align - 1)) & ~(align - 1);
 }
