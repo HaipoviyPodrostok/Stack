@@ -33,6 +33,8 @@ typedef enum {
     STACK_ERR_TOO_SMALL_CAPACITY = 17,
     STACK_ERR_STK_REALLOC_FAILED = 18,
     STACK_ERR_STK_OVERFLOW_ERROR = 19,
+    STACK_ERR_STK_IS_TOO_BIG = 20,
+    STACK_ERR_NOWHERE_TO_EXPAND = 21,
 } stack_err_t;
 
 const char* stack_error_str(stack_err_t error);

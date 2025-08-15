@@ -43,7 +43,8 @@ stack_err_t stack_dump(stack_t* const stk) {
     
         LOG(INFO, NO_LOG_INFO,
         "Left canary:  %lx   (Expected: %lx)                                         \n"
-        "Right canary  %lx   (Expected: %lx)                                         \n",
+        "Right canary  %lx   (Expected: %lx)                                         \n"
+        "============================================================================\n",
         *((CANARY_TYPE*) (stk->raw_mem)),    left_canary,
         *((CANARY_TYPE*) (stk_data_offset(stk, stk->capacity))), right_canary);
 

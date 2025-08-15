@@ -8,11 +8,7 @@
 
 #include "stack_funcs.h"
 
-#define LINEAR_THR 100
-#define ADDED_CELLS 10
 #define CELL_SIZE(elem_size) ((elem_size + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT
-#define MAX_CAPACITY(cell_size) \
-        (MAX_STK_SIZE - sizeof(LEFT_CANARY) - sizeof(RIGHT_CANARY)) / cell_size
 
 static stack_err_t stack_overflow_check(stack_t* stk);
 static stack_err_t realloc_stack_init(stack_t* stk, const size_t new_capacity);
@@ -31,9 +27,10 @@ stack_err_t stack_ctor(stack_t* const stk,     const char* stk_name,
     stk->capacity = capacity;
     stk->cell_size = CELL_SIZE(elem_size);
 
-    const size_t data_size = RAW_MEM_SIZE(stk->cell_size, stk->capacity);
+    const size_t raw_mem_size = RAW_MEM_SIZE(stk->cell_size, stk->capacity);
+    if (raw_mem_size > MAX_STK_SIZE) return STACK_ERR_STK_IS_TOO_BIG;
 
-    stk->raw_mem = calloc(1, data_size);  //first canary ptr
+    stk->raw_mem = calloc(1, raw_mem_size);  //first canary ptr
     if (!stk->raw_mem) return STACK_ERR_ALLOCATION_FAILED;
     stk->data = (void*) ((char*) stk->raw_mem + sizeof(CANARY_TYPE));
 
@@ -63,8 +60,18 @@ void stack_dtor(stack_t* const stk) {
 stack_err_t stack_push(stack_t* const stk, const void* const value) {
     if (!stk) return STACK_ERR_NULL_PTR_ERROR;
     
-    if (stack_overflow_check(stk) != STACK_ERR_SUCCESS) {
+    stack_err_t overflow_check_result = stack_overflow_check(stk);
+
+    if (overflow_check_result != STACK_ERR_SUCCESS &&
+        overflow_check_result != STACK_ERR_NOWHERE_TO_EXPAND) {
+        
         return STACK_ERR_STK_REALLOC_FAILED;
+    }
+
+    if (overflow_check_result == STACK_ERR_NOWHERE_TO_EXPAND) {
+        LOG(WARNING, LOG_INFO, "Еhe last value is not taken because"
+                               "the stack space has run out");
+        return STACK_ERR_SUCCESS;
     }
 
     stack_dump(stk);
@@ -103,18 +110,20 @@ static stack_err_t stack_overflow_check(stack_t* stk) {
     assert(stk);
 
     size_t new_capacity = 0;
+    size_t old_capacity = stk->capacity;
 
-    if (stk->capacity >= MIN_STK_CAP) {
-        if (stk->capacity <= LINEAR_THR) {                      // Threshold of linear/exponential growth
+    if (old_capacity >= MIN_STK_CAP) {
+        if (old_capacity <= LINEAR_THR) {                      // Threshold of linear/exponential growth
             if (stk->size >= stk->capacity) {
-                new_capacity = stk->capacity + ADDED_CELLS;
+                new_capacity = old_capacity + ADDED_CELLS;
                 if (RAW_MEM_SIZE(stk->cell_size, new_capacity) > MAX_STK_SIZE) {
-                    new_capacity = MAX_CAPACITY(stk->cell_size);
+                    new_capacity = old_capacity;
+                    if (stk->size >= new_capacity) return STACK_ERR_NOWHERE_TO_EXPAND;
                 }
                 return realloc_stack_init(stk, new_capacity);
             }
-            if ((stk->capacity - stk->size) >= ALLOC_RESERVE) {
-                new_capacity = stk->capacity - ADDED_CELLS;
+            if ((stk->capacity - stk->size) >= SHRINK_GAP) {
+                new_capacity = old_capacity - ADDED_CELLS;
                 if (new_capacity < stk->size) {
                     new_capacity = stk->size;
                 }
@@ -125,14 +134,15 @@ static stack_err_t stack_overflow_check(stack_t* stk) {
             }
         } else {
             if (stk->size >= stk->capacity) {
-                new_capacity = stk->capacity * 2;
+                new_capacity = old_capacity * GROWTH_RATE;
                 if (RAW_MEM_SIZE(stk->cell_size, new_capacity) > MAX_STK_SIZE) {
-                    new_capacity = MAX_CAPACITY(stk->cell_size);
+                    new_capacity = old_capacity;
+                    if (stk->size >= new_capacity) return STACK_ERR_NOWHERE_TO_EXPAND;
                 }
                 return realloc_stack_init(stk, new_capacity);
             }
-            if (stk->capacity >= 2 * stk->size) {
-                new_capacity = stk->capacity / 2;          
+            if (old_capacity >= GROWTH_RATE * stk->size) {
+                new_capacity = old_capacity / GROWTH_RATE;          
                 if (new_capacity < stk->size) {
                     new_capacity = stk->size;
                 }
@@ -150,7 +160,7 @@ static stack_err_t stack_overflow_check(stack_t* stk) {
 static stack_err_t realloc_stack_init(stack_t* stk, const size_t new_capacity) {
     assert(stk);
 
-    if (new_capacity == stk->capacity) {
+    if (new_capacity != stk->capacity) {
         void* new_raw_mem = NULL;
 
         new_raw_mem = realloc(stk->raw_mem, RAW_MEM_SIZE(stk->cell_size, new_capacity));

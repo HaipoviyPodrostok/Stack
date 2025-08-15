@@ -41,4 +41,8 @@
 # debug information files
 *.dwo
 
+# Log files
+/log
+*.log
+
 .vscode
