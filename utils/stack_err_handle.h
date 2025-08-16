@@ -3,13 +3,14 @@
 
 #include <stdio.h>
 
-#define STACK_ERROR(call_func, ...) ({                                              \
-    stack_err_t error = call_func;                                                  \
-    if (error) {                                                                    \
-        fprintf(stderr, "[" #call_func "] Error: %s\n", stack_error_str(error));     \
-        __VA_ARGS__;                                                                \
-        return error;                                                               \
-    }                                                                               \
+#define STACK_ERROR(call_func, ...) ({                                                                \
+    stack_err_t error = call_func;                                                                    \
+    if (error) {                                                                                      \
+        fprintf(stderr, "%s: %d, "#call_func": %s\n", __FILE__, __LINE__, stack_error_str(error));    \
+        LOG(ERROR, LOG_INFO, " %s", stack_error_str(error));                                          \
+        __VA_ARGS__;                                                                                  \
+        return error;                                                                                 \
+    }                                                                                                 \
 });
 
 typedef enum {
@@ -35,6 +36,9 @@ typedef enum {
     STACK_ERR_STK_OVERFLOW_ERROR = 19,
     STACK_ERR_STK_IS_TOO_BIG = 20,
     STACK_ERR_NOWHERE_TO_EXPAND = 21,
+    STACK_ERR_INVALID_STRUCT = 22,
+    STACK_ERR_CANARIES_ARE_CORRUPTED = 23,
+    STACK_ERR_ALIGN_IS_BROKEN = 24,
 } stack_err_t;
 
 const char* stack_error_str(stack_err_t error);

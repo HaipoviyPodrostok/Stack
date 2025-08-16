@@ -1,18 +1,9 @@
-#include <stdio.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include <string.h>
-#include <stddef.h>
-
 #include "stack_funcs.h"
 
 #define CELL_SIZE(elem_size) ((elem_size + ALIGNMENT - 1) / ALIGNMENT) * ALIGNMENT
 
 static stack_err_t stack_overflow_check(stack_t* stk);
 static stack_err_t realloc_stack_init(stack_t* stk, const size_t new_capacity);
-static inline size_t align_up(size_t size, size_t align);
 
 stack_err_t stack_ctor(stack_t* const stk,     const char* stk_name,
                        const size_t elem_size, const size_t capacity) {
@@ -22,9 +13,9 @@ stack_err_t stack_ctor(stack_t* const stk,     const char* stk_name,
 
     strncpy(stk->name, stk_name, DEFAULT_STR_LEN);
     stk->name[DEFAULT_STR_LEN - 1] = '\0';
-    stk->size = 0;
+    stk->size      = 0;
     stk->elem_size = elem_size;
-    stk->capacity = capacity;
+    stk->capacity  = capacity;
     stk->cell_size = CELL_SIZE(elem_size);
 
     const size_t raw_mem_size = RAW_MEM_SIZE(stk->cell_size, stk->capacity);
@@ -39,8 +30,8 @@ stack_err_t stack_ctor(stack_t* const stk,     const char* stk_name,
     stk->data = (void*) ((char*) stk->raw_mem 
                                + align_up(sizeof(CANARY_TYPE), ALIGNMENT));
 
-    CANARY_TYPE* last_canary_ptr = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
-    *last_canary_ptr = RIGHT_CANARY;
+    stk->right_canary_ptr  = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
+    *stk->right_canary_ptr = RIGHT_CANARY;
 
     return STACK_ERR_SUCCESS;
 }
@@ -60,21 +51,20 @@ void stack_dtor(stack_t* const stk) {
 stack_err_t stack_push(stack_t* const stk, const void* const value) {
     if (!stk) return STACK_ERR_NULL_PTR_ERROR;
     
+    STACK_ERROR(stack_verificator(stk), stack_dtor(stk));
+
     stack_err_t overflow_check_result = stack_overflow_check(stk);
 
     if (overflow_check_result != STACK_ERR_SUCCESS &&
         overflow_check_result != STACK_ERR_NOWHERE_TO_EXPAND) {
-        
         return STACK_ERR_STK_REALLOC_FAILED;
     }
 
     if (overflow_check_result == STACK_ERR_NOWHERE_TO_EXPAND) {
-        LOG(WARNING, LOG_INFO, "Еhe last value is not taken because"
-                               "the stack space has run out");
-        return STACK_ERR_SUCCESS;
+        LOG(WARNING, LOG_INFO, "It is impossible to add an element: "
+            "the stack has reached its maximum size.");
+        return STACK_ERR_NOWHERE_TO_EXPAND;
     }
-
-    stack_dump(stk);
 
     void* stk_peak = stk_data_offset(stk, stk->size);
     memcpy(stk_peak, value, stk->elem_size);
@@ -85,18 +75,24 @@ stack_err_t stack_push(stack_t* const stk, const void* const value) {
 
     stk->size++;
 
+    STACK_ERROR(stack_verificator(stk), stack_dtor(stk));
+
     return STACK_ERR_SUCCESS;
 }
 
 stack_err_t stack_pop(stack_t* const stk, void* const value) {
     if (!stk || !value) return STACK_ERR_NULL_PTR_ERROR;
     
+    STACK_ERROR(stack_verificator(stk), stack_dtor(stk));
+
     stk->size--;
 
     void* stk_peak = stk_data_offset(stk, stk->size);
     memcpy(value, stk_peak, stk->elem_size);
 
     memset(stk_peak, 0, stk->elem_size);
+
+    STACK_ERROR(stack_verificator(stk), stack_dtor(stk));
 
     return STACK_ERR_SUCCESS;
 }
@@ -174,13 +170,13 @@ static stack_err_t realloc_stack_init(stack_t* stk, const size_t new_capacity) {
         stk->data = (void*) ((char*) stk->raw_mem 
         + align_up(sizeof(CANARY_TYPE), ALIGNMENT));
         
-        CANARY_TYPE* last_canary_ptr = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
-        *last_canary_ptr = RIGHT_CANARY;
+        stk->right_canary_ptr  = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
+        *stk->right_canary_ptr = RIGHT_CANARY;
     }
 
     return STACK_ERR_SUCCESS;
 }
 
-static inline size_t align_up(size_t size, size_t align) {
+size_t align_up(size_t size, size_t align) {
     return (size + (align - 1)) & ~(align - 1);
 }

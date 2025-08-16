@@ -27,12 +27,13 @@
 
 typedef struct {
     char name[DEFAULT_STR_LEN];
-    void* raw_mem;
-    void* data;
+    void*  raw_mem;
+    void*  data;
     size_t elem_size;
     size_t size;
     size_t capacity;
     size_t cell_size;
+    CANARY_TYPE* right_canary_ptr;
 } stack_t;
 
 #endif //STACK_STRUCTS_H
