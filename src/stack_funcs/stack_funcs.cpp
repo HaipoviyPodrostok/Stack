@@ -13,6 +13,7 @@ stack_err_t stack_ctor(stack_t* const stk,     const char* stk_name,
 
     strncpy(stk->name, stk_name, DEFAULT_STR_LEN);
     stk->name[DEFAULT_STR_LEN - 1] = '\0';
+    
     stk->size      = 0;
     stk->elem_size = elem_size;
     stk->capacity  = capacity;
@@ -25,13 +26,13 @@ stack_err_t stack_ctor(stack_t* const stk,     const char* stk_name,
     if (!stk->raw_mem) return STACK_ERR_ALLOCATION_FAILED;
     stk->data = (void*) ((char*) stk->raw_mem + sizeof(CANARY_TYPE));
 
-    *((CANARY_TYPE*) stk->raw_mem) = LEFT_CANARY;
+    *((CANARY_TYPE*) stk->raw_mem) = DATA_CAN_LEFT;
     
     stk->data = (void*) ((char*) stk->raw_mem 
                                + align_up(sizeof(CANARY_TYPE), ALIGNMENT));
 
-    stk->right_canary_ptr  = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
-    *stk->right_canary_ptr = RIGHT_CANARY;
+    stk->data_can_right_ptr  = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
+    *stk->data_can_right_ptr = DATA_CAN_RIGHT;
 
     return STACK_ERR_SUCCESS;
 }
@@ -165,13 +166,13 @@ static stack_err_t realloc_stack_init(stack_t* stk, const size_t new_capacity) {
 
         stk->capacity = new_capacity;
         
-        *((CANARY_TYPE*) stk->raw_mem) = LEFT_CANARY;
+        *((CANARY_TYPE*) stk->raw_mem) = DATA_CAN_LEFT;
         
         stk->data = (void*) ((char*) stk->raw_mem 
         + align_up(sizeof(CANARY_TYPE), ALIGNMENT));
         
-        stk->right_canary_ptr  = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
-        *stk->right_canary_ptr = RIGHT_CANARY;
+        stk->data_can_right_ptr  = (CANARY_TYPE*) stk_data_offset(stk, stk->capacity);
+        *stk->data_can_right_ptr = DATA_CAN_RIGHT;
     }
 
     return STACK_ERR_SUCCESS;
