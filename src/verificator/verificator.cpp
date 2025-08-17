@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "stack_structs.h"
 #include "verificator.h"
 #include "stack_err_handle.h"
@@ -47,8 +45,12 @@ stack_err_t stack_verificator(stack_t* const stk) {
         stack_dump(stk);
         return STACK_ERR_STK_OVERFLOW_ERROR;
     }
+
+    IF_HASH(validate(stk));
+
     return STACK_ERR_SUCCESS;
 }
+
 
 stack_err_t stack_dump(stack_t* const stk) {
     if (!stk) return STACK_ERR_NULL_PTR_ERROR;
@@ -80,13 +82,13 @@ stack_err_t stack_dump(stack_t* const stk) {
 
     LOG(INFO, NO_LOG_INFO,
         "Left data canary:  %lx   (Expected: %lx)                                    \n"
-        "Right data canary  %lx   (Expected: %lx)                                    \n",
+        "Right data canary: %lx   (Expected: %lx)                                    \n",
         *((CANARY_TYPE*) (stk->raw_mem)),    data_can_left,
         *((CANARY_TYPE*) (stk_data_offset(stk, stk->capacity))), data_can_right);
 
     LOG(INFO, NO_LOG_INFO,
-        "Left data canary:  %lx   (Expected: %lx)                                    \n"
-        "Right data canary  %lx   (Expected: %lx)                                    \n"
+        "Left struct canary:  %lx   (Expected: %lx)                                    \n"
+        "Right struct canary: %lx   (Expected: %lx)                                    \n"
         "============================================================================\n",
         stk->struct_can_left,  struct_can_left,
         stk->struct_can_right, struct_can_right);
@@ -98,11 +100,17 @@ static bool is_aligned(const void* ptr, const size_t align) {
     return ((uintptr_t) ptr % align) == 0;
 }
 
-static uint64_t stack_hash(const void* adr, size_t len, uint64_t seed) {
-    const unsigned char* p = (const unsigned char*) adr;
-    uint64_t h = seed;
-    for (size_t i = 0; i < len; i++) {
-        h = h * 131u + p[i];
+#ifdef HASH_PROTECT
+stack_err_t validate(stack_t* const stk) {
+    
+    if (stk->struct_hash != calc_struct_hash(stk)) {
+        return STACK_ERR_STRUCT_HASH_ERROR;        
     }
-    return h;
+    
+    if (stk->data_hash != calc_data_hash(stk)) {
+        return STACK_ERR_DATA_HASH_ERROR;
+    }
+
+    return STACK_ERR_SUCCESS;   
 }
+#endif /*HASH_PROTECT*/

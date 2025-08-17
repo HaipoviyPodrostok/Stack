@@ -9,5 +9,6 @@
 
 stack_err_t stack_verificator(stack_t* const stk);
 stack_err_t stack_dump(stack_t* const stk);
+stack_err_t validate(stack_t* const stk);
 
 #endif //VERIFICATOR_H

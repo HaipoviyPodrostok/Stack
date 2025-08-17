@@ -6,7 +6,7 @@
 #define STACK_ERROR(call_func, ...) ({                                                                \
     stack_err_t error = call_func;                                                                    \
     if (error) {                                                                                      \
-        fprintf(stderr, "%s: %d, "#call_func": %s\n", __FILE__, __LINE__, stack_error_str(error));    \
+        fprintf(stderr, "%s:%d, "#call_func": %s\n", __FILE__, __LINE__, stack_error_str(error));    \
         LOG(ERROR, LOG_INFO, " %s", stack_error_str(error));                                          \
         __VA_ARGS__;                                                                                  \
         return error;                                                                                 \
@@ -40,6 +40,8 @@ typedef enum {
     STACK_ERR_DATA_CANARIES_ARE_CORRUPTED = 23,
     STACK_ERR_STRUCT_CANARIES_ARE_CORRUPTED = 24,
     STACK_ERR_ALIGN_IS_BROKEN = 25,
+    STACK_ERR_STRUCT_HASH_ERROR = 26,
+    STACK_ERR_DATA_HASH_ERROR = 27,
 } stack_err_t;
 
 const char* stack_error_str(stack_err_t error);
