@@ -98,8 +98,18 @@ stack_err_t stack_push(stack_t* const stk, const void* const value) {
 stack_err_t stack_pop(stack_t* const stk, void* const value) {
     if (!stk || !value) return STACK_ERR_NULL_PTR_ERROR;
     
-    STACK_ERROR(stack_verificator(stk), stack_dtor(stk));
+    if (stk->raw_mem == NULL) {
+        LOG(ERROR, LOG_INFO, "Stack has been already destroyed!");
+        return STACK_ERR_STACK_HAS_BEEN_DTORED;
+    }
 
+    if (stk->size == 0) {
+        LOG(WARNING, LOG_INFO, "Stack \"%s\" is empty! Can not pop!", stk->name);
+        return STACK_ERR_SUCCESS;
+    }
+    
+    STACK_ERROR(stack_verificator(stk), stack_dtor(stk));
+    
     stk->size--;
 
     void* stk_peak = stk_data_offset(stk, stk->size);

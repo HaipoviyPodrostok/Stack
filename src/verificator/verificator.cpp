@@ -46,53 +46,71 @@ stack_err_t stack_verificator(stack_t* const stk) {
         return STACK_ERR_STK_OVERFLOW_ERROR;
     }
 
-    IF_HASH(validate(stk));
+    IF_HASH(STACK_ERROR(validate(stk)));
 
     return STACK_ERR_SUCCESS;
 }
 
 
 stack_err_t stack_dump(stack_t* const stk) {
-    if (!stk) return STACK_ERR_NULL_PTR_ERROR;
 
     LOG(INFO, LOG_INFO, "\n"
-        "============================== STACK DUMP =================================\n"
-        "Stack name:   %s                                                           \n"
-        "Stack ptr:    %p                                                           \n"
-        "Raw mem:      %p                                                           \n"
-        "Data:         %p                                                           \n"
-        "Elem size:    %lu                                                          \n"
-        "Current size: %lu                                                          \n" 
-        "Capacity:     %lu                                                          \n"
-        "Cell size:    %lu                                                          \n",
-        
-        stk->name,
-        stk,
-        stk->raw_mem,
-        stk->data,
-        stk->elem_size,
-        stk->size,
-        stk->capacity,
-        stk->cell_size );
+        "============================== STACK DUMP ==================================\n"    
+        "Stack ptr:    %p                                                            \n",
+        stk );
 
-    size_t data_can_left    = DATA_CAN_LEFT;
-    size_t data_can_right   = DATA_CAN_RIGHT;
-    size_t struct_can_left  = STRUCT_CAN_LEFT;
-    size_t struct_can_right = STRUCT_CAN_RIGHT; 
+    if (stk) {
 
-    LOG(INFO, NO_LOG_INFO,
-        "Left data canary:  %lx   (Expected: %lx)                                    \n"
-        "Right data canary: %lx   (Expected: %lx)                                    \n",
-        *((CANARY_TYPE*) (stk->raw_mem)),    data_can_left,
-        *((CANARY_TYPE*) (stk_data_offset(stk, stk->capacity))), data_can_right);
+        LOG(INFO, NO_LOG_INFO, 
+            "Stack name:   %s                                                           \n"
+            "Raw mem:      %p                                                           \n"
+            "Data:         %p                                                           \n"
+            "Elem size:    %lu                                                          \n"
+            "Current size: %lu                                                          \n" 
+            "Capacity:     %lu                                                          \n"
+            "Cell size:    %lu                                                          \n",
+            
+            stk->name,
+            stk->raw_mem,
+            stk->data,
+            stk->elem_size,
+            stk->size,
+            stk->capacity,
+            stk->cell_size );
 
-    LOG(INFO, NO_LOG_INFO,
-        "Left struct canary:  %lx   (Expected: %lx)                                    \n"
-        "Right struct canary: %lx   (Expected: %lx)                                    \n"
-        "============================================================================\n",
-        stk->struct_can_left,  struct_can_left,
-        stk->struct_can_right, struct_can_right);
+        size_t data_can_left    = DATA_CAN_LEFT;
+        size_t data_can_right   = DATA_CAN_RIGHT;
+        size_t struct_can_left  = STRUCT_CAN_LEFT;
+        size_t struct_can_right = STRUCT_CAN_RIGHT; 
 
+        LOG(INFO, NO_LOG_INFO,
+            "Left data canary:  %lx   (Expected: %lx)                                    \n"
+            "Right data canary: %lx   (Expected: %lx)                                    \n",
+
+            *((CANARY_TYPE*) (stk->raw_mem)),    data_can_left,
+            *((CANARY_TYPE*) (stk_data_offset(stk, stk->capacity))), data_can_right);
+
+        LOG(INFO, NO_LOG_INFO, "                                                         \n"
+            "Left struct canary:  %lx   (Expected: %lx)                                  \n"
+            "Right struct canary: %lx   (Expected: %lx)                                  \n",
+
+            stk->struct_can_left,  struct_can_left,
+            stk->struct_can_right, struct_can_right);
+    
+#ifdef HASH_PROTECT
+        LOG(INFO, NO_LOG_INFO, 
+            "Struct hash: %lu   (Expected: %lu)                                         \n"
+            "Data hash:   %lu   (Expected: %lu)                                         \n",
+
+            stk->struct_hash, calc_struct_hash(stk),
+            stk->data_hash,   calc_data_hash(stk)   );
+#endif
+
+        LOG(INFO, NO_LOG_INFO, "                                                         \n"
+            "============================================================================\n");
+    
+    }
+    
     return STACK_ERR_SUCCESS;
 }
 

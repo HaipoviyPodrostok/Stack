@@ -42,6 +42,7 @@ typedef enum {
     STACK_ERR_ALIGN_IS_BROKEN = 25,
     STACK_ERR_STRUCT_HASH_ERROR = 26,
     STACK_ERR_DATA_HASH_ERROR = 27,
+    STACK_ERR_STACK_HAS_BEEN_DTORED = 28,
 } stack_err_t;
 
 const char* stack_error_str(stack_err_t error);

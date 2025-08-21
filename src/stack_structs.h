@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#define HASH_PROTECT //TODO убрать перед релизом
-
 #ifdef  HASH_PROTECT
 #define IF_HASH(...) __VA_ARGS__
 #define IF_ELSE_HASH(smth, other_smth) smth

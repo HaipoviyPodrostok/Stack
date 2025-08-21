@@ -36,6 +36,7 @@ const char* stack_error_str(stack_err_t error) {
         CASE_ENUM_TO_STRING(STACK_ERR_ALIGN_IS_BROKEN);
         CASE_ENUM_TO_STRING(STACK_ERR_STRUCT_HASH_ERROR);
         CASE_ENUM_TO_STRING(STACK_ERR_DATA_HASH_ERROR);
+        CASE_ENUM_TO_STRING(STACK_ERR_STACK_HAS_BEEN_DTORED);
         default:
             return "STACK_ERR_UNKNOWN_ERROR";
         return "STACK_ERR_UNKNOWN_ERROR";

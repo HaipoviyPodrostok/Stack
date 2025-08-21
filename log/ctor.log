@@ -9,3 +9,59 @@ Current size: 0
 Capacity:     10                                                          
 Cell size:    48                                                          
 
+[21-08-2025 02:47:03] [INFO] src/verificator/verificator.cpp:57, stack_dump(): 
+============================== STACK DUMP ==================================
+Stack ptr:    0x7ffd9fff7140                                                            
+
+Stack name:   stack 1                                                           
+Raw mem:      0x555e8ee0a500                                                           
+Data:         0x555e8ee0a508                                                           
+Elem size:    48                                                          
+Current size: 1568                                                          
+Capacity:     1760                                                          
+Cell size:    48                                                          
+
+Left data canary:  dedbaba   (Expected: dedbaba)                                    
+Right data canary: deddead   (Expected: deddead)                                    
+
+                                                         
+Left struct canary:  cafebabe   (Expected: cafebabe)                                  
+Right struct canary: deadbeef   (Expected: deadbeef)                                  
+
+Struct hash: 3727951960786203383   (Expected: 3727951960786203383)                                         
+Data hash:   18332646640969323139   (Expected: 18332646640969323139)                                         
+
+                                                         
+============================================================================
+
+[21-08-2025 03:00:55] [INFO] src/verificator/verificator.cpp:57, stack_dump(): 
+============================== STACK DUMP ==================================
+Stack ptr:    0x7fffd472cdd0                                                            
+
+Stack name:   stack 1                                                           
+Raw mem:      0x556419f06500                                                           
+Data:         0x556419f06508                                                           
+Elem size:    48                                                          
+Current size: 18446744073709551615                                                          
+Capacity:     10                                                          
+Cell size:    48                                                          
+
+Left data canary:  dedbaba   (Expected: dedbaba)                                    
+Right data canary: deddead   (Expected: deddead)                                    
+
+                                                         
+Left struct canary:  cafebabe   (Expected: cafebabe)                                  
+Right struct canary: deadbeef   (Expected: deadbeef)                                  
+
+[21-08-2025 03:11:52] [WARNING] src/stack_funcs/stack_funcs.cpp:102, stack_pop(): Stack "stack 1" is empty! Can not pop
+[22-08-2025 02:12:52] [ERROR] src/verificator/verificator.cpp:49, stack_verificator():  STACK_ERR_DATA_HASH_ERROR
+[22-08-2025 02:12:52] [ERROR] src/stack_funcs/stack_funcs.cpp:67, stack_push():  STACK_ERR_DATA_HASH_ERROR
+[22-08-2025 02:12:52] [WARNING] src/stack_funcs/stack_funcs.cpp:102, stack_pop(): Stack "stack 1" is empty! Can not pop!
+[22-08-2025 02:15:40] [ERROR] src/verificator/verificator.cpp:49, stack_verificator():  STACK_ERR_DATA_HASH_ERROR
+[22-08-2025 02:15:40] [ERROR] src/stack_funcs/stack_funcs.cpp:67, stack_push():  STACK_ERR_DATA_HASH_ERROR
+[22-08-2025 02:15:40] [WARNING] src/stack_funcs/stack_funcs.cpp:102, stack_pop(): Stack "stack 1" is empty! Can not pop!
+[22-08-2025 02:15:40] [INFO] main.cpp:38, main(): 0x7ffe915a3e70
+[22-08-2025 02:24:08] [ERROR] src/verificator/verificator.cpp:49, stack_verificator():  STACK_ERR_DATA_HASH_ERROR
+[22-08-2025 02:24:08] [ERROR] src/stack_funcs/stack_funcs.cpp:67, stack_push():  STACK_ERR_DATA_HASH_ERROR
+[22-08-2025 02:24:08] [ERROR] src/stack_funcs/stack_funcs.cpp:102, stack_pop(): Stack has been already destroyed!
+[22-08-2025 02:24:08] [INFO] main.cpp:38, main(): 0x7ffe48f0b460
